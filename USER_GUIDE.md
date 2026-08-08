@@ -18,6 +18,36 @@ connects with their **own** credentials, which are stored privately for them.
 
 ---
 
+## Getting started: make your own copy
+
+This add-on is distributed as a **template Google Sheet** with the code already
+built in. You don't install anything — you just make your own copy.
+
+**➡️ [Click here to copy the Databricks Sync template](https://docs.google.com/spreadsheets/d/1JR1AFPB9LnqjAm0yvGCdE2AymtdMnVPTPrEoPNFqvh4/copy)**
+
+1. Click the link above.
+2. Google shows a **"Copy document"** prompt. Click **Make a copy**.
+3. A new sheet — *"Copy of Databricks Sync — Master Template"* — appears in
+   **your** Google Drive. It's yours: rename it, share it, and use it like any
+   other sheet. Renaming it is a good idea (for example, "Q3 Sales Sync").
+4. Reload the copy once. Within a few seconds a **Databricks Sync** menu appears
+   in the menu bar, next to *Help*.
+
+> **First-time authorization prompt.** The first time you click a
+> **Databricks Sync** menu item, Google asks you to authorize the script and
+> shows a warning that reads **"Google hasn't verified this app."** This is
+> expected for template-copy add-ons — the script now runs privately in *your*
+> account. Click **Advanced → Go to Databricks Sync (unsafe)**, then **Allow**.
+> You only do this once per copy.
+
+Everyone who needs their own synced sheet should make their **own** copy from
+the link above, rather than sharing a single copy — that way each person uses
+their own Databricks credentials.
+
+Once you've got your copy and the menu is showing, continue below.
+
+---
+
 ## Before you start
 
 You'll need three things from your Databricks workspace (your Databricks admin

@@ -1,0 +1,7 @@
+# Push only the Apps Script sources to the bound project.
+# Ignore everything, then un-ignore the GAS files.
+**/**
+
+!appsscript.json
+!Code.gs
+!Sidebar.html
