@@ -219,6 +219,7 @@
       // ---- State -----------------------------------------------------------
       var hasPat = false;          // a PAT is already stored server-side
       var hasClientSecret = false; // a client secret is already stored
+      var redirectUri = '';        // static per-script OAuth redirect URL
 
       // ---- Boot ------------------------------------------------------------
       window.onload = function () {
@@ -240,6 +241,7 @@
 
         hasPat = !!cfg.hasPat;
         hasClientSecret = !!cfg.hasClientSecret;
+        redirectUri = cfg.redirectUri || (cfg.oauth && cfg.oauth.redirectUri) || '';
 
         // For saved secrets, show a "leave blank to keep" affordance instead of
         // the secret itself (which the backend never sends to the client).
@@ -262,6 +264,11 @@
         show('patFields', type === 'pat');
         show('clientFields', type === 'sp' || type === 'oauth');
         show('oauthBox', type === 'oauth');
+        // The redirect URL is static per script, so render it as soon as the
+        // OAuth box is shown — even before anything is saved.
+        if (type === 'oauth') {
+          document.getElementById('redirectUri').textContent = redirectUri || '—';
+        }
       }
 
       function applyOAuthStatus(oauth) {
@@ -284,7 +291,8 @@
           link.classList.add('hidden');
           if (pending) pending.classList.remove('hidden');
         }
-        document.getElementById('redirectUri').textContent = oauth.redirectUri || '—';
+        if (oauth.redirectUri) redirectUri = oauth.redirectUri;
+        document.getElementById('redirectUri').textContent = redirectUri || '—';
       }
 
       function copyRedirect() {

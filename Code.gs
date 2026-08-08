@@ -99,6 +99,9 @@ function getConfig() {
     clientId: props.getProperty(PROP.CLIENT_ID) || '',
     hasPat: !!props.getProperty(PROP.PAT),
     hasClientSecret: !!props.getProperty(PROP.CLIENT_SECRET),
+    // Static per-script; returned regardless of the saved auth type so the UI
+    // can show it the moment the user switches to OAuth on a fresh copy.
+    redirectUri: getRedirectUri_(),
     oauth: getOAuthStatus_(authType)
   };
   return config;
