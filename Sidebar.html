@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top" />
+    <meta charset="utf-8" />
+    <style>
+      :root {
+        --db-orange: #ff3621;
+        --db-navy: #1b3139;
+        --border: #d1d9e0;
+        --muted: #5f6b76;
+        --ok-bg: #e6f4ea;
+        --ok-fg: #137333;
+        --err-bg: #fce8e6;
+        --err-fg: #c5221f;
+        --info-bg: #e8f0fe;
+        --info-fg: #1967d2;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 13px;
+        color: var(--db-navy);
+        margin: 0;
+        padding: 14px;
+      }
+
+      h2 {
+        font-size: 15px;
+        margin: 0 0 4px;
+      }
+
+      .subtitle {
+        color: var(--muted);
+        font-size: 12px;
+        margin: 0 0 14px;
+      }
+
+      label {
+        display: block;
+        font-weight: bold;
+        margin: 12px 0 4px;
+      }
+
+      .hint {
+        font-weight: normal;
+        color: var(--muted);
+        font-size: 11px;
+        margin: 2px 0 0;
+      }
+
+      input, select {
+        width: 100%;
+        padding: 7px 8px;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        font-size: 13px;
+        background: #fff;
+      }
+
+      input:focus, select:focus {
+        outline: none;
+        border-color: var(--db-orange);
+      }
+
+      .hidden { display: none !important; }
+
+      .row-buttons {
+        display: flex;
+        gap: 8px;
+        margin-top: 16px;
+      }
+
+      button {
+        flex: 1;
+        padding: 9px 10px;
+        border: none;
+        border-radius: 4px;
+        font-size: 13px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      button:disabled { opacity: 0.6; cursor: default; }
+
+      .btn-primary { background: var(--db-orange); color: #fff; }
+      .btn-secondary { background: #eef1f4; color: var(--db-navy); }
+
+      #status {
+        margin-top: 14px;
+        padding: 9px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+        display: none;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+      #status.ok   { background: var(--ok-bg);   color: var(--ok-fg);   display: block; }
+      #status.err  { background: var(--err-bg);  color: var(--err-fg);  display: block; }
+      #status.info { background: var(--info-bg); color: var(--info-fg); display: block; }
+
+      #oauthBox {
+        margin-top: 12px;
+        padding: 10px;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        background: #fafbfc;
+      }
+      #oauthBox .oauth-title { font-weight: bold; margin-bottom: 6px; }
+      #oauthBox a { color: var(--info-fg); word-break: break-all; }
+      .badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 11px;
+        font-weight: bold;
+      }
+      .badge.on  { background: var(--ok-bg);  color: var(--ok-fg); }
+      .badge.off { background: var(--err-bg); color: var(--err-fg); }
+
+      hr { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+
+      .redirect-uri {
+        font-family: monospace;
+        font-size: 11px;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 3px;
+        padding: 4px 6px;
+        margin-top: 4px;
+        word-break: break-all;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h2>Databricks Sync</h2>
+    <p class="subtitle">Connect this sheet to a Databricks SQL warehouse.</p>
+
+    <label for="hostname">Server Hostname
+      <span class="hint">e.g. adb-1234567890.11.azuredatabricks.net (no https://)</span>
+    </label>
+    <input id="hostname" type="text" placeholder="adb-123.net" autocomplete="off" />
+
+    <label for="httpPath">HTTP Path
+      <span class="hint">e.g. /sql/1.0/warehouses/abc123def456</span>
+    </label>
+    <input id="httpPath" type="text" placeholder="sql/1.0/warehouses/abc" autocomplete="off" />
+
+    <label for="authType">Authentication Type</label>
+    <select id="authType">
+      <option value="pat">Personal Access Token (PAT)</option>
+      <option value="sp">Service Principal (M2M)</option>
+      <option value="oauth">User OAuth (U2M)</option>
+    </select>
+
+    <!-- PAT -->
+    <div id="patFields">
+      <label for="patToken">PAT Token
+        <span class="hint" id="patHint">Password field — stored per-user.</span>
+      </label>
+      <input id="patToken" type="password" placeholder="dapi…" autocomplete="new-password" />
+    </div>
+
+    <!-- Service Principal / OAuth share Client ID + Secret -->
+    <div id="clientFields">
+      <label for="clientId">Client ID</label>
+      <input id="clientId" type="text" placeholder="Service principal application ID" autocomplete="off" />
+
+      <label for="clientSecret">Client Secret
+        <span class="hint" id="secretHint">Password field — stored per-user.</span>
+      </label>
+      <input id="clientSecret" type="password" placeholder="OAuth secret" autocomplete="new-password" />
+    </div>
+
+    <!-- OAuth authorization status / link -->
+    <div id="oauthBox" class="hidden">
+      <div class="oauth-title">
+        OAuth Authorization: <span id="oauthBadge" class="badge off">Not authorized</span>
+      </div>
+      <div id="oauthAuthorized" class="hidden">
+        <p class="hint">This sheet is connected to Databricks for your account.</p>
+        <button type="button" class="btn-secondary" id="reauthBtn" onclick="resetOAuth()">Re-authorize</button>
+      </div>
+      <div id="oauthUnauthorized" class="hidden">
+        <p class="hint">Save your Client ID &amp; Secret first, then authorize:</p>
+        <p><a id="oauthLink" href="#" target="_blank" rel="noopener">Authorize with Databricks →</a></p>
+        <p class="hint">Redirect URL to register in your Databricks OAuth app:</p>
+        <div class="redirect-uri" id="redirectUri">—</div>
+      </div>
+    </div>
+
+    <div class="row-buttons">
+      <button type="button" class="btn-primary" id="saveBtn" onclick="save()">Save Configuration</button>
+      <button type="button" class="btn-secondary" id="syncBtn" onclick="syncNow()">Sync Now</button>
+    </div>
+
+    <div id="status"></div>
+
+    <hr />
+    <p class="hint">
+      Custom queries: create a sheet named <b>Databricks_Settings</b> with sheet
+      names in column A and SQL in column B. Sheets without an entry sync via
+      <code>SELECT * FROM &lt;sheet name&gt;</code>.
+    </p>
+
+    <script>
+      // ---- State -----------------------------------------------------------
+      var hasPat = false;          // a PAT is already stored server-side
+      var hasClientSecret = false; // a client secret is already stored
+
+      // ---- Boot ------------------------------------------------------------
+      window.onload = function () {
+        google.script.run
+          .withSuccessHandler(populate)
+          .withFailureHandler(function (err) {
+            showStatus('err', 'Could not load configuration: ' + err.message);
+          })
+          .getConfig();
+
+        document.getElementById('authType').addEventListener('change', onAuthTypeChange);
+      };
+
+      function populate(cfg) {
+        document.getElementById('hostname').value = cfg.hostname || '';
+        document.getElementById('httpPath').value = cfg.httpPath || '';
+        document.getElementById('authType').value = cfg.authType || 'pat';
+        document.getElementById('clientId').value = cfg.clientId || '';
+
+        hasPat = !!cfg.hasPat;
+        hasClientSecret = !!cfg.hasClientSecret;
+
+        // For saved secrets, show a "leave blank to keep" affordance instead of
+        // the secret itself (which the backend never sends to the client).
+        if (hasPat) {
+          document.getElementById('patToken').placeholder = '•••••••• (saved — leave blank to keep)';
+          document.getElementById('patHint').textContent = 'A token is saved. Leave blank to keep it.';
+        }
+        if (hasClientSecret) {
+          document.getElementById('clientSecret').placeholder = '•••••••• (saved — leave blank to keep)';
+          document.getElementById('secretHint').textContent = 'A secret is saved. Leave blank to keep it.';
+        }
+
+        applyOAuthStatus(cfg.oauth || {});
+        onAuthTypeChange();
+      }
+
+      // ---- Conditional field visibility ------------------------------------
+      function onAuthTypeChange() {
+        var type = document.getElementById('authType').value;
+        show('patFields', type === 'pat');
+        show('clientFields', type === 'sp' || type === 'oauth');
+        show('oauthBox', type === 'oauth');
+      }
+
+      function applyOAuthStatus(oauth) {
+        var authorized = !!oauth.authorized;
+        var badge = document.getElementById('oauthBadge');
+        badge.textContent = authorized ? 'Authorized' : 'Not authorized';
+        badge.className = 'badge ' + (authorized ? 'on' : 'off');
+
+        show('oauthAuthorized', authorized);
+        show('oauthUnauthorized', !authorized);
+
+        var link = document.getElementById('oauthLink');
+        if (oauth.authorizationUrl) {
+          link.href = oauth.authorizationUrl;
+          link.classList.remove('hidden');
+        } else {
+          link.href = '#';
+        }
+        document.getElementById('redirectUri').textContent = oauth.redirectUri || '—';
+      }
+
+      // ---- Actions ---------------------------------------------------------
+      function save() {
+        var payload = {
+          hostname: val('hostname'),
+          httpPath: val('httpPath'),
+          authType: val('authType'),
+          patToken: val('patToken'),
+          clientId: val('clientId'),
+          clientSecret: val('clientSecret')
+        };
+
+        setBusy(true);
+        showStatus('info', 'Saving…');
+        google.script.run
+          .withSuccessHandler(function (res) {
+            setBusy(false);
+            showStatus('ok', res.message || 'Saved.');
+            // Reflect newly-saved secrets and refresh OAuth status/URL.
+            google.script.run.withSuccessHandler(populate).getConfig();
+          })
+          .withFailureHandler(function (err) {
+            setBusy(false);
+            showStatus('err', err.message || 'Save failed.');
+          })
+          .saveConfig(payload);
+      }
+
+      function syncNow() {
+        setBusy(true);
+        showStatus('info', 'Running sync… this can take a moment for large results.');
+        google.script.run
+          .withSuccessHandler(function (res) {
+            setBusy(false);
+            if (res.rowCount === 0) {
+              showStatus('info', 'Query succeeded but returned no rows.\nQuery: ' + res.query);
+            } else {
+              showStatus('ok', 'Synced ' + res.rowCount + ' row(s) × ' +
+                res.columnCount + ' column(s) into "' + res.sheetName + '".');
+            }
+          })
+          .withFailureHandler(function (err) {
+            setBusy(false);
+            showStatus('err', 'Sync failed: ' + (err.message || err));
+          })
+          .syncDatabricksData();
+      }
+
+      function resetOAuth() {
+        setBusy(true);
+        google.script.run
+          .withSuccessHandler(function () {
+            setBusy(false);
+            google.script.run.withSuccessHandler(function (cfg) {
+              applyOAuthStatus(cfg.oauth || {});
+              showStatus('info', 'Authorization cleared. Click "Authorize with Databricks" to reconnect.');
+            }).getConfig();
+          })
+          .withFailureHandler(function (err) {
+            setBusy(false);
+            showStatus('err', err.message || 'Could not reset authorization.');
+          })
+          .resetOAuth();
+      }
+
+      // ---- DOM helpers -----------------------------------------------------
+      function val(id) { return document.getElementById(id).value.trim(); }
+
+      function show(id, visible) {
+        document.getElementById(id).classList.toggle('hidden', !visible);
+      }
+
+      function setBusy(busy) {
+        document.getElementById('saveBtn').disabled = busy;
+        document.getElementById('syncBtn').disabled = busy;
+      }
+
+      function showStatus(kind, message) {
+        var el = document.getElementById('status');
+        el.className = kind;
+        el.textContent = message;
+      }
+    </script>
+  </body>
+</html>
