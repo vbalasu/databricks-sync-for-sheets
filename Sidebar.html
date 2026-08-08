@@ -3,66 +3,106 @@
   <head>
     <base target="_top" />
     <meta charset="utf-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap"
+      rel="stylesheet" />
     <style>
+      /* Google Material Design language: Roboto + Google color palette. */
       :root {
-        --db-orange: #ff3621;
-        --db-navy: #1b3139;
-        --border: #d1d9e0;
-        --muted: #5f6b76;
-        --ok-bg: #e6f4ea;
-        --ok-fg: #137333;
-        --err-bg: #fce8e6;
-        --err-fg: #c5221f;
-        --info-bg: #e8f0fe;
-        --info-fg: #1967d2;
+        --g-blue:        #1a73e8; /* primary */
+        --g-blue-hover:  #1765cc;
+        --g-blue-press:  #185abc;
+        --g-red:         #d93025;
+        --g-green:       #1e8e3e;
+        --g-yellow:      #f9ab00;
+
+        --text-primary:   #202124; /* google grey 900 */
+        --text-secondary: #5f6368; /* google grey 700 */
+        --divider:        #dadce0; /* google grey 300 */
+        --surface:        #ffffff;
+        --surface-alt:    #f8f9fa; /* google grey 50 */
+        --hover-fill:     #f1f3f4; /* google grey 100 */
+
+        --ok-bg:   #e6f4ea;  --ok-fg:   #137333;
+        --err-bg:  #fce8e6;  --err-fg:  #c5221f;
+        --info-bg: #e8f0fe;  --info-fg: #1967d2;
       }
 
       * { box-sizing: border-box; }
 
       body {
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 13px;
-        color: var(--db-navy);
+        font-family: 'Roboto', Arial, Helvetica, sans-serif;
+        font-size: 14px;
+        line-height: 1.5;
+        letter-spacing: 0.2px;
+        color: var(--text-primary);
         margin: 0;
-        padding: 14px;
+        padding: 16px;
+        -webkit-font-smoothing: antialiased;
       }
 
       h2 {
-        font-size: 15px;
+        font-family: 'Roboto', sans-serif;
+        font-size: 18px;
+        font-weight: 500;
         margin: 0 0 4px;
+        color: var(--text-primary);
       }
 
       .subtitle {
-        color: var(--muted);
-        font-size: 12px;
-        margin: 0 0 14px;
+        color: var(--text-secondary);
+        font-size: 13px;
+        margin: 0 0 20px;
       }
 
       label {
         display: block;
-        font-weight: bold;
-        margin: 12px 0 4px;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-primary);
+        margin: 18px 0 6px;
       }
 
       .hint {
-        font-weight: normal;
-        color: var(--muted);
-        font-size: 11px;
+        display: block;
+        font-weight: 400;
+        color: var(--text-secondary);
+        font-size: 12px;
         margin: 2px 0 0;
       }
 
+      /* Material outlined text fields. */
       input, select {
         width: 100%;
-        padding: 7px 8px;
-        border: 1px solid var(--border);
-        border-radius: 4px;
-        font-size: 13px;
-        background: #fff;
+        padding: 10px 12px;
+        border: 1px solid var(--divider);
+        border-radius: 8px;
+        font-family: 'Roboto', sans-serif;
+        font-size: 14px;
+        color: var(--text-primary);
+        background: var(--surface);
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
       }
+
+      input::placeholder { color: #9aa0a6; }
+
+      input:hover, select:hover { border-color: var(--text-secondary); }
 
       input:focus, select:focus {
         outline: none;
-        border-color: var(--db-orange);
+        border-color: var(--g-blue);
+        box-shadow: 0 0 0 1px var(--g-blue);
+      }
+
+      select {
+        appearance: none;
+        -webkit-appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='%235f6368'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 8px center;
+        padding-right: 34px;
       }
 
       .hidden { display: none !important; }
@@ -70,29 +110,45 @@
       .row-buttons {
         display: flex;
         gap: 8px;
-        margin-top: 16px;
+        margin-top: 24px;
       }
 
+      /* Material buttons: contained primary, text/tonal secondary. */
       button {
         flex: 1;
-        padding: 9px 10px;
+        padding: 10px 16px;
         border: none;
-        border-radius: 4px;
-        font-size: 13px;
-        font-weight: bold;
+        border-radius: 20px; /* Material full-height pill */
+        font-family: 'Roboto', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 0.25px;
         cursor: pointer;
+        transition: background-color 0.15s ease, box-shadow 0.15s ease;
       }
 
-      button:disabled { opacity: 0.6; cursor: default; }
+      button:disabled { opacity: 0.5; cursor: default; box-shadow: none; }
 
-      .btn-primary { background: var(--db-orange); color: #fff; }
-      .btn-secondary { background: #eef1f4; color: var(--db-navy); }
+      .btn-primary {
+        background: var(--g-blue);
+        color: #fff;
+        box-shadow: 0 1px 2px rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+      }
+      .btn-primary:hover:not(:disabled)  { background: var(--g-blue-hover); }
+      .btn-primary:active:not(:disabled) { background: var(--g-blue-press); }
+
+      .btn-secondary {
+        background: transparent;
+        color: var(--g-blue);
+        border: 1px solid var(--divider);
+      }
+      .btn-secondary:hover:not(:disabled) { background: rgba(26,115,232,0.06); border-color: var(--g-blue); }
 
       #status {
-        margin-top: 14px;
-        padding: 9px 10px;
-        border-radius: 4px;
-        font-size: 12px;
+        margin-top: 18px;
+        padding: 12px 14px;
+        border-radius: 8px;
+        font-size: 13px;
         display: none;
         white-space: pre-wrap;
         word-break: break-word;
@@ -101,35 +157,47 @@
       #status.err  { background: var(--err-bg);  color: var(--err-fg);  display: block; }
       #status.info { background: var(--info-bg); color: var(--info-fg); display: block; }
 
+      /* Material outlined card. */
       #oauthBox {
-        margin-top: 12px;
-        padding: 10px;
-        border: 1px solid var(--border);
-        border-radius: 4px;
-        background: #fafbfc;
+        margin-top: 16px;
+        padding: 16px;
+        border: 1px solid var(--divider);
+        border-radius: 12px;
+        background: var(--surface-alt);
       }
-      #oauthBox .oauth-title { font-weight: bold; margin-bottom: 6px; }
-      #oauthBox a { color: var(--info-fg); word-break: break-all; }
+      #oauthBox .oauth-title { font-weight: 500; font-size: 14px; margin-bottom: 8px; }
+      #oauthBox a {
+        color: var(--g-blue);
+        font-weight: 500;
+        text-decoration: none;
+        word-break: break-all;
+      }
+      #oauthBox a:hover { text-decoration: underline; }
+
+      /* Material chip / assist badge. */
       .badge {
         display: inline-block;
-        padding: 2px 8px;
-        border-radius: 10px;
-        font-size: 11px;
-        font-weight: bold;
+        padding: 3px 10px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 500;
       }
       .badge.on  { background: var(--ok-bg);  color: var(--ok-fg); }
       .badge.off { background: var(--err-bg); color: var(--err-fg); }
 
-      hr { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+      hr { border: none; border-top: 1px solid var(--divider); margin: 20px 0; }
+
+      code { font-family: 'Roboto Mono', monospace; font-size: 12px; }
 
       .redirect-uri {
-        font-family: monospace;
-        font-size: 11px;
-        background: #fff;
-        border: 1px solid var(--border);
-        border-radius: 3px;
-        padding: 4px 6px;
-        margin-top: 4px;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 12px;
+        color: var(--text-primary);
+        background: var(--surface);
+        border: 1px solid var(--divider);
+        border-radius: 8px;
+        padding: 8px 10px;
+        margin-top: 6px;
         word-break: break-all;
       }
     </style>

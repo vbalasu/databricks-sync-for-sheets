@@ -159,16 +159,33 @@ So a tab named `orders` pulls everything from a table named `orders`.
 
 ### Using your own custom queries
 
-To control exactly what each tab pulls, create a tab named **`Databricks_Settings`**
-and fill in two columns:
+To control exactly what each tab pulls, add a tab named **`Databricks_Settings`**
+that maps a tab name (column A) to the SQL that should run for it (column B).
 
-| Column A — tab name | Column B — SQL query |
+**Set it up once:**
+
+1. At the bottom of the sheet, click **+** to add a new tab and rename it exactly
+   **`Databricks_Settings`** (the name and capitalization must match).
+2. In **A1** type `Sheet Name` and in **B1** type `SQL Query` (these header labels
+   are for your reference — the add-on reads every row).
+3. Add one row per tab you want to customize. For example, to pull your
+   workspace's billing usage into a tab named **`Billing_Usage`**:
+
+| A — Sheet Name | B — SQL Query |
 | --- | --- |
+| `Sheet Name` | `SQL Query` |
+| `Billing_Usage` | `SELECT usage_date, sku_name, usage_quantity FROM system.billing.usage ORDER BY usage_date DESC LIMIT 100` |
 | `Sales` | `SELECT * FROM prod.sales.orders WHERE region = 'EMEA'` |
-| `Inventory` | `SELECT sku, qty FROM prod.ops.inventory` |
 
-Now, when you sync the **Sales** tab, it runs the query in column B instead of
-the default. Tabs not listed here still use the default `SELECT * FROM …`.
+4. Create a tab whose name matches column A (e.g. **`Billing_Usage`**), select it,
+   and run **Sync Now**. It runs the query from column B instead of the default.
+
+> **`system.billing.usage`** is a built-in Databricks system table available in
+> every Unity Catalog workspace, so the example above works out of the box (as
+> long as your credentials have access to the `system` catalog). It's a good way
+> to confirm your connection is working before pointing at your own tables.
+
+Tabs not listed in `Databricks_Settings` still use the default `SELECT * FROM …`.
 
 Tips:
 - The tab name in column A must match the tab name exactly (including
