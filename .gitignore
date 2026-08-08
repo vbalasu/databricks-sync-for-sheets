@@ -1,1 +1,5 @@
 .isaac/
+
+# clasp project IDs are specific to the original Apps Script project.
+# Forkers should run `clasp create`/`clasp clone` to generate their own.
+.clasp.json
