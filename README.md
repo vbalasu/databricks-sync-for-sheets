@@ -6,6 +6,10 @@ to a Databricks workspace and syncs data using the
 It supports three enterprise authentication methods — Personal Access Token
 (PAT), Service Principal (M2M client credentials), and User OAuth (U2M).
 
+> **📖 New to the add-on?** See the **[User Guide](USER_GUIDE.md)** for
+> step-by-step instructions on connecting a sheet and syncing data. The rest of
+> this README covers installation and deployment.
+
 ## Files
 
 | File | Purpose |
