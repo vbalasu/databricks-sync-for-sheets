@@ -185,10 +185,19 @@
         <button type="button" class="btn-secondary" id="reauthBtn" onclick="resetOAuth()">Re-authorize</button>
       </div>
       <div id="oauthUnauthorized" class="hidden">
-        <p class="hint">Save your Client ID &amp; Secret first, then authorize:</p>
-        <p><a id="oauthLink" href="#" target="_blank" rel="noopener">Authorize with Databricks →</a></p>
-        <p class="hint">Redirect URL to register in your Databricks OAuth app:</p>
+        <p class="hint"><b>Step 1.</b> Register this Redirect URL in your Databricks
+          OAuth app (Account Console → App connections). You need it to create the
+          app that issues your Client ID &amp; Secret:</p>
         <div class="redirect-uri" id="redirectUri">—</div>
+        <button type="button" class="btn-secondary" id="copyRedirectBtn"
+          onclick="copyRedirect()" style="margin-top:6px;">Copy Redirect URL</button>
+
+        <p class="hint" style="margin-top:12px;"><b>Step 2.</b> Enter the Client ID
+          &amp; Secret above and click <b>Save Configuration</b>.</p>
+
+        <p class="hint" style="margin-top:12px;"><b>Step 3.</b> Authorize:</p>
+        <p><a id="oauthLink" class="hidden" href="#" target="_blank" rel="noopener">Authorize with Databricks →</a></p>
+        <p class="hint" id="oauthLinkPending">Save your Client ID &amp; Secret first — the authorize link appears here.</p>
       </div>
     </div>
 
@@ -265,13 +274,42 @@
         show('oauthUnauthorized', !authorized);
 
         var link = document.getElementById('oauthLink');
+        var pending = document.getElementById('oauthLinkPending');
         if (oauth.authorizationUrl) {
           link.href = oauth.authorizationUrl;
           link.classList.remove('hidden');
+          if (pending) pending.classList.add('hidden');
         } else {
           link.href = '#';
+          link.classList.add('hidden');
+          if (pending) pending.classList.remove('hidden');
         }
         document.getElementById('redirectUri').textContent = oauth.redirectUri || '—';
+      }
+
+      function copyRedirect() {
+        var text = document.getElementById('redirectUri').textContent;
+        if (!text || text === '—') return;
+        // Clipboard API is unavailable in the add-on iframe context on some
+        // browsers; fall back to a temporary textarea + execCommand.
+        var done = function () { showStatus('info', 'Redirect URL copied to clipboard.'); };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done, fallbackCopy);
+        } else {
+          fallbackCopy();
+        }
+        function fallbackCopy() {
+          var ta = document.createElement('textarea');
+          ta.value = text;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.focus();
+          ta.select();
+          try { document.execCommand('copy'); done(); }
+          catch (e) { showStatus('err', 'Could not copy — select the URL manually.'); }
+          document.body.removeChild(ta);
+        }
       }
 
       // ---- Actions ---------------------------------------------------------

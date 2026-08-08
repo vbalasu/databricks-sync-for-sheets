@@ -288,21 +288,38 @@ function getOAuthStatus_(authType) {
   if (authType !== AUTH.OAUTH) {
     return { authorized: false, authorizationUrl: null, redirectUri: null };
   }
+
+  // The redirect URL depends only on this script's id, not on the hostname or
+  // client id. Surface it unconditionally so the user can register it in their
+  // Databricks OAuth app *before* they have a Client ID to enter.
+  var redirectUri = getRedirectUri_();
+
   var props = PropertiesService.getUserProperties();
   if (!props.getProperty(PROP.HOSTNAME) || !props.getProperty(PROP.CLIENT_ID)) {
-    // Not enough info to build a service yet.
-    return { authorized: false, authorizationUrl: null, redirectUri: null };
+    // Not enough info to build the authorization URL yet, but the redirect URL
+    // is still known.
+    return { authorized: false, authorizationUrl: null, redirectUri: redirectUri };
   }
   try {
     var service = getOAuthService_();
     return {
       authorized: service.hasAccess(),
       authorizationUrl: service.hasAccess() ? null : service.getAuthorizationUrl(),
-      redirectUri: service.getRedirectUri()
+      redirectUri: service.getRedirectUri() || redirectUri
     };
   } catch (err) {
-    return { authorized: false, authorizationUrl: null, redirectUri: null };
+    return { authorized: false, authorizationUrl: null, redirectUri: redirectUri };
   }
+}
+
+/**
+ * Builds the OAuth redirect URL for this script. This is the same value the
+ * apps-script-oauth2 library uses, but derived directly from the script id so
+ * it is available without a fully-configured service.
+ * @return {string} e.g. https://script.google.com/macros/d/<SCRIPT_ID>/usercallback
+ */
+function getRedirectUri_() {
+  return 'https://script.google.com/macros/d/' + ScriptApp.getScriptId() + '/usercallback';
 }
 
 /** Clears any stored OAuth token so the user can re-authorize. Callable from UI. */
