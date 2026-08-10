@@ -205,17 +205,49 @@
 
   <body>
     <h2>Databricks Sync</h2>
-    <p class="subtitle">Connect this sheet to a Databricks SQL warehouse.</p>
+    <p class="subtitle">Connect this sheet to a Databricks SQL warehouse or Lakebase.</p>
+
+    <label for="backendType">Backend</label>
+    <select id="backendType">
+      <option value="warehouse">SQL Warehouse (Delta tables)</option>
+      <option value="lakebase">Lakebase (Postgres · Data API)</option>
+    </select>
 
     <label for="hostname">Server Hostname
       <span class="hint">e.g. adb-1234567890.11.azuredatabricks.net (no https://)</span>
     </label>
     <input id="hostname" type="text" placeholder="adb-123.net" autocomplete="off" />
 
-    <label for="httpPath">HTTP Path
-      <span class="hint">e.g. /sql/1.0/warehouses/abc123def456</span>
-    </label>
-    <input id="httpPath" type="text" placeholder="sql/1.0/warehouses/abc" autocomplete="off" />
+    <!-- SQL Warehouse backend -->
+    <div id="warehouseFields">
+      <label for="httpPath">HTTP Path
+        <span class="hint">e.g. /sql/1.0/warehouses/abc123def456</span>
+      </label>
+      <input id="httpPath" type="text" placeholder="sql/1.0/warehouses/abc" autocomplete="off" />
+    </div>
+
+    <!-- Lakebase (Data API) backend -->
+    <div id="lakebaseFields">
+      <label for="lakebaseEndpoint">Lakebase REST Endpoint
+        <span class="hint">Data API URL from the Lakebase app (API tab), without a schema.</span>
+      </label>
+      <input id="lakebaseEndpoint" type="text" placeholder="https://…databricks.com/…" autocomplete="off" />
+
+      <label for="lakebaseSchema">Schema
+        <span class="hint">Postgres schema; defaults to public.</span>
+      </label>
+      <input id="lakebaseSchema" type="text" placeholder="public" autocomplete="off" />
+
+      <label for="lakebasePk">Primary Key column
+        <span class="hint">Optional. Required for Replace (used to delete all rows).</span>
+      </label>
+      <input id="lakebasePk" type="text" placeholder="id" autocomplete="off" />
+
+      <p class="hint" id="lakebasePatWarning" style="color: var(--g-yellow); margin-top: 10px;">
+        Lakebase Data API works best with Service Principal or User OAuth — a PAT
+        may be rejected by the authenticator role.
+      </p>
+    </div>
 
     <label for="authType">Authentication Type</label>
     <select id="authType">
@@ -277,6 +309,39 @@
     <div id="status"></div>
 
     <hr />
+
+    <!-- Write back to Databricks -->
+    <div id="writeBox">
+      <div class="oauth-title">Write to Databricks</div>
+      <p class="hint">Writes the <b>active sheet</b> to a table. Row 1 must hold the
+        column names. Append adds rows; Replace overwrites the whole table.</p>
+
+      <label for="writeTable">Target table
+        <span class="hint" id="writeTableHint">Warehouse: catalog.schema.table · Lakebase: table name</span>
+      </label>
+      <input id="writeTable" type="text" placeholder="catalog.schema.table" autocomplete="off" />
+
+      <label for="writeMode">Mode</label>
+      <select id="writeMode" onchange="onWriteModeChange()">
+        <option value="append">Append — add rows</option>
+        <option value="replace">Replace — overwrite the whole table</option>
+      </select>
+
+      <!-- Destructive-replace confirmation -->
+      <div id="replaceConfirm" class="hidden" style="margin-top:12px;">
+        <p class="hint" style="color: var(--g-red);">
+          Replace <b>overwrites all rows</b> in the target table. Re-type the
+          table name to enable the button.</p>
+        <input id="writeTableConfirm" type="text" placeholder="Re-type target table"
+          autocomplete="off" oninput="onConfirmInput()" />
+      </div>
+
+      <div class="row-buttons">
+        <button type="button" class="btn-primary" id="writeBtn" onclick="writeNow()">Write to Databricks</button>
+      </div>
+    </div>
+
+    <hr />
     <p class="hint">
       Custom queries: create a sheet named <b>Databricks_Settings</b> with sheet
       names in column A and SQL in column B. Sheets without an entry sync via
@@ -299,6 +364,7 @@
           .getConfig();
 
         document.getElementById('authType').addEventListener('change', onAuthTypeChange);
+        document.getElementById('backendType').addEventListener('change', onBackendChange);
       };
 
       function populate(cfg) {
@@ -306,6 +372,10 @@
         document.getElementById('httpPath').value = cfg.httpPath || '';
         document.getElementById('authType').value = cfg.authType || 'pat';
         document.getElementById('clientId').value = cfg.clientId || '';
+        document.getElementById('backendType').value = cfg.backendType || 'warehouse';
+        document.getElementById('lakebaseEndpoint').value = cfg.lakebaseEndpoint || '';
+        document.getElementById('lakebaseSchema').value = cfg.lakebaseSchema || 'public';
+        document.getElementById('lakebasePk').value = cfg.lakebasePk || '';
 
         hasPat = !!cfg.hasPat;
         hasClientSecret = !!cfg.hasClientSecret;
@@ -324,14 +394,30 @@
 
         applyOAuthStatus(cfg.oauth || {});
         onAuthTypeChange();
+        onBackendChange();
+        onWriteModeChange();
       }
 
       // ---- Conditional field visibility ------------------------------------
+      function onBackendChange() {
+        var backend = document.getElementById('backendType').value;
+        show('warehouseFields', backend === 'warehouse');
+        show('lakebaseFields', backend === 'lakebase');
+        // The PAT caveat only matters for Lakebase.
+        var authType = document.getElementById('authType').value;
+        show('lakebasePatWarning', backend === 'lakebase' && authType === 'pat');
+        document.getElementById('writeTable').placeholder =
+          backend === 'lakebase' ? 'table' : 'catalog.schema.table';
+      }
+
       function onAuthTypeChange() {
         var type = document.getElementById('authType').value;
         show('patFields', type === 'pat');
         show('clientFields', type === 'sp' || type === 'oauth');
         show('oauthBox', type === 'oauth');
+        // Keep the Lakebase PAT warning in sync with the auth type too.
+        var backend = document.getElementById('backendType').value;
+        show('lakebasePatWarning', backend === 'lakebase' && type === 'pat');
         // The redirect URL is static per script, so render it as soon as the
         // OAuth box is shown — even before anything is saved.
         if (type === 'oauth') {
@@ -396,7 +482,11 @@
           authType: val('authType'),
           patToken: val('patToken'),
           clientId: val('clientId'),
-          clientSecret: val('clientSecret')
+          clientSecret: val('clientSecret'),
+          backendType: val('backendType'),
+          lakebaseEndpoint: val('lakebaseEndpoint'),
+          lakebaseSchema: val('lakebaseSchema'),
+          lakebasePk: val('lakebasePk')
         };
 
         setBusy(true);
@@ -422,7 +512,7 @@
           .withSuccessHandler(function (res) {
             setBusy(false);
             if (res.rowCount === 0) {
-              showStatus('info', 'Query succeeded but returned no rows.\nQuery: ' + res.query);
+              showStatus('info', 'Query succeeded but returned no rows.\nSource: ' + res.source);
             } else {
               showStatus('ok', 'Synced ' + res.rowCount + ' row(s) × ' +
                 res.columnCount + ' column(s) into "' + res.sheetName + '".');
@@ -433,6 +523,55 @@
             showStatus('err', 'Sync failed: ' + (err.message || err));
           })
           .syncDatabricksData();
+      }
+
+      // ---- Writeback -------------------------------------------------------
+      function onWriteModeChange() {
+        var replace = document.getElementById('writeMode').value === 'replace';
+        show('replaceConfirm', replace);
+        // Reset the confirmation field whenever the mode changes.
+        document.getElementById('writeTableConfirm').value = '';
+        updateWriteButton();
+      }
+
+      function onConfirmInput() { updateWriteButton(); }
+
+      // Enable Write only when Replace has a matching typed confirmation.
+      function updateWriteButton() {
+        var replace = document.getElementById('writeMode').value === 'replace';
+        if (!replace) {
+          document.getElementById('writeBtn').disabled = false;
+          return;
+        }
+        var table = val('writeTable');
+        var confirm = val('writeTableConfirm');
+        document.getElementById('writeBtn').disabled = !(table && confirm === table);
+      }
+
+      function writeNow() {
+        var table = val('writeTable');
+        var mode = val('writeMode');
+        if (!table) { showStatus('err', 'Enter a target table.'); return; }
+        if (mode === 'replace' && val('writeTableConfirm') !== table) {
+          showStatus('err', 'Re-type the table name to confirm the replace.');
+          return;
+        }
+
+        setBusy(true);
+        showStatus('info', (mode === 'replace' ? 'Replacing ' : 'Appending to ') +
+          '"' + table + '"… this can take a moment for large sheets.');
+        google.script.run
+          .withSuccessHandler(function (res) {
+            setBusy(false);
+            showStatus('ok', (res.mode === 'replace' ? 'Replaced ' : 'Appended ') +
+              res.rowCount + ' row(s) × ' + res.columnCount + ' column(s) in "' +
+              res.targetTable + '" (' + res.batches + ' batch(es)).');
+          })
+          .withFailureHandler(function (err) {
+            setBusy(false);
+            showStatus('err', 'Write failed: ' + (err.message || err));
+          })
+          .writeActiveSheetToDatabricks(table, mode);
       }
 
       function resetOAuth() {
@@ -462,6 +601,9 @@
       function setBusy(busy) {
         document.getElementById('saveBtn').disabled = busy;
         document.getElementById('syncBtn').disabled = busy;
+        document.getElementById('writeBtn').disabled = busy;
+        // When freeing the UI, re-apply the Replace-confirmation gate.
+        if (!busy) updateWriteButton();
       }
 
       function showStatus(kind, message) {
