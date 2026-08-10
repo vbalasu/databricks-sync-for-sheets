@@ -17,7 +17,7 @@ what it does **not** do.
 ## Who provides the add-on
 
 The add-on is published by **Vijay Balasubramaniam** (individual developer).
-Contact: _<support email — fill in before publishing>_.
+Contact: support@vbalasu.com.
 
 ## What the add-on accesses
 
@@ -87,4 +87,4 @@ Material changes will be reflected here with an updated "Last updated" date.
 
 ## Contact
 
-Questions about this policy: _<support email — fill in before publishing>_.
+Questions about this policy: support@vbalasu.com.

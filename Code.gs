@@ -773,6 +773,35 @@ function isBlankRow_(row) {
 }
 
 /**
+ * Neutralizes spreadsheet formula injection (CWE-1236) in values read from
+ * Databricks before they are written to a sheet. A string beginning with one of
+ * the formula-trigger characters ( = + - @ ) — or a leading tab/carriage return
+ * that Sheets strips before parsing — is coerced to a literal by prefixing a
+ * single quote, so it is displayed verbatim instead of being evaluated.
+ *
+ * Non-strings (numbers, booleans, Dates from native-typed backends such as
+ * Lakebase) are returned unchanged: only strings can carry a formula. Numeric
+ * strings like "-5" or "+441234" (SQL Warehouse returns all values as strings)
+ * are also left unchanged so legitimate signed numbers still land as numbers.
+ *
+ * @param {*} cell A cell value from a backend read.
+ * @return {*} The value, escaped to a literal string if it would trigger a formula.
+ */
+function escapeCellForSheet_(cell) {
+  if (typeof cell !== 'string' || cell.length === 0) return cell;
+  var first = cell.charAt(0);
+  if (first === '=' || first === '+' || first === '-' || first === '@' ||
+      first === '\t' || first === '\r') {
+    // Leave plain numeric strings (incl. signed) as-is so they parse as numbers.
+    if ((first === '+' || first === '-') && /^[+-]?(\d+\.?\d*|\.\d+)$/.test(cell)) {
+      return cell;
+    }
+    return "'" + cell;
+  }
+  return cell;
+}
+
+/**
  * Validates header names for use as SQL/JSON identifiers: non-empty and unique.
  * @param {string[]} headers Column names from row 1.
  * @return {string[]} The same headers (trimmed) if valid.
@@ -1137,7 +1166,7 @@ function writeResultToSheet_(sheet, result, mode) {
     var normalized = new Array(width);
     for (var c = 0; c < width; c++) {
       var cell = row[c];
-      normalized[c] = (cell === null || cell === undefined) ? '' : cell;
+      normalized[c] = escapeCellForSheet_((cell === null || cell === undefined) ? '' : cell);
     }
     return normalized;
   });
@@ -1151,7 +1180,8 @@ function writeResultToSheet_(sheet, result, mode) {
 
   // Overwrite (or append to an empty sheet): write headers + data from A1.
   if (mode === READ_MODE.OVERWRITE) sheet.clearContents();
-  var output = [headers.slice()].concat(dataRows);
+  var safeHeaders = headers.map(escapeCellForSheet_);
+  var output = [safeHeaders].concat(dataRows);
   sheet.getRange(1, 1, output.length, width).setValues(output);
 }
 

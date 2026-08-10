@@ -65,4 +65,4 @@ constitutes acceptance.
 
 ## 8. Contact
 
-Questions about these terms: _<support email — fill in before publishing>_.
+Questions about these terms: support@vbalasu.com.

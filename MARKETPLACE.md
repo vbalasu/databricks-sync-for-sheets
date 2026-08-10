@@ -40,14 +40,14 @@ project. Host the privacy policy + ToS on a domain you control and verify it via
 DNS. (A GitHub Pages _project_ page such as `you.github.io/repo` generally cannot
 be verified; a custom domain or a user/org root page can.)
 
-- Privacy policy: `https://<your-domain>/databricks-sync/privacy-policy` (source:
+- Privacy policy: `https://vbalasu.com/databricks-sync/privacy-policy` (source:
   `docs/privacy-policy.md`)
-- Terms of service: `https://<your-domain>/databricks-sync/terms-of-service`
+- Terms of service: `https://vbalasu.com/databricks-sync/terms-of-service`
   (source: `docs/terms-of-service.md`)
 - Homepage/support: a page on the same domain.
 
-Fill in the real support email in `docs/privacy-policy.md` and
-`docs/terms-of-service.md` before hosting.
+The support email `support@vbalasu.com` is set in `docs/privacy-policy.md` and
+`docs/terms-of-service.md`.
 
 ## Listing copy (draft)
 
@@ -64,7 +64,7 @@ Fill in the real support email in `docs/privacy-policy.md` and
 - **Category:** Productivity (or Business Tools)
 - **Pricing:** Free
 - **Developer:** Vijay Balasubramaniam
-- **Support email / URL:** _<fill in>_
+- **Support email / URL:** support@vbalasu.com
 - **Privacy policy URL / ToS URL:** as above
 - **Graphics needed (user-supplied artwork):** application logo/icons and
   screenshots — see "Icon & screenshot spec".
