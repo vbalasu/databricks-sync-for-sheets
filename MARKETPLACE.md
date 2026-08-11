@@ -51,16 +51,26 @@ The support email `support@vbalasu.com` is set in `docs/privacy-policy.md` and
 
 ## Listing copy (draft)
 
-- **App name:** Databricks Sync for Google Sheets
-- **Short description:** Sync data between Google Sheets and your Databricks
-  workspace or Lakebase — read query results in, write sheet rows back.
+- **App name:** Databricks Sync for Sheets
+- **Short description:** Two-way sync between Google Sheets™ and your own
+  Databricks SQL Warehouse or Lakebase — read query results in, write sheet rows back.
 - **Detailed description:**
-  > Connect a Google Sheet to your own Databricks SQL Warehouse or Lakebase
-  > (Postgres) database. Pull query results into a sheet, and write sheet data
-  > back to a table with Append or Replace. Supports Personal Access Token,
-  > Service Principal (M2M), and User OAuth (U2M) authentication. Your
-  > credentials are stored privately per user; data flows directly between your
-  > sheet and your Databricks over HTTPS — nothing is sent to the developer.
+  > Connect a Google Sheets™ spreadsheet to your own Databricks SQL Warehouse or
+  > Lakebase (Postgres) database. Pull query results into a sheet, and write sheet
+  > data back to a table with Append or Replace. Supports Personal Access Token,
+  > Service Principal (M2M), and User OAuth (U2M) authentication. Your credentials
+  > are stored privately per user; data flows directly between your sheet and your
+  > Databricks over HTTPS — nothing is sent to the developer.
+  >
+  > Google Sheets™ and Google Workspace™ are trademarks of Google LLC. This add-on
+  > is an independent project and is not created, endorsed, or sponsored by Google
+  > LLC.
+
+> **Trademark attribution (required by Google Workspace Marketplace review):**
+> append **™** to Google product names (Google Sheets™, Google Workspace™) in the
+> app name, short description, and detailed description, and include the trademark
+> footnote above in the detailed description. See
+> <https://developers.google.com/workspace/marketplace/terms/branding#giving_proper_attribution>.
 - **Category:** Productivity (or Business Tools)
 - **Pricing:** Free
 - **Developer:** Vijay Balasubramaniam

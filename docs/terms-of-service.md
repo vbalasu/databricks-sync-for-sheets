@@ -2,7 +2,7 @@
 
 _Last updated: 2026-08-10_
 
-These terms govern your use of the **Databricks Sync for Google Sheets** add-on
+These terms govern your use of the **Databricks Sync for Google Sheets™** add-on
 ("the add-on"), provided by **Vijay Balasubramaniam** (individual developer,
 "the developer"). By installing or using the add-on, you agree to these terms.
 
@@ -66,3 +66,9 @@ constitutes acceptance.
 ## 8. Contact
 
 Questions about these terms: support@vbalasu.com.
+
+## 9. Trademarks
+
+Google Sheets™ and Google Workspace™ are trademarks of Google LLC. This add-on is
+an independent project and is not created, endorsed, or sponsored by Google LLC.
+Databricks and Lakebase are trademarks of Databricks, Inc.

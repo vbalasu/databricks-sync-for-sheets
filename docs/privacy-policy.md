@@ -2,10 +2,10 @@
 
 _Last updated: 2026-08-10_
 
-Databricks Sync for Google Sheets ("the add-on") is a Google Workspace editor
-add-on that connects a Google Sheet to a user's own Databricks workspace or
-Lakebase database to read data into the sheet and write sheet data back to
-Databricks. This policy explains what the add-on accesses, what it stores, and
+Databricks Sync for Google Sheets™ ("the add-on") is a Google Workspace™ editor
+add-on that connects a Google Sheets™ spreadsheet to a user's own Databricks
+workspace or Lakebase database to read data into the sheet and write sheet data
+back to Databricks. This policy explains what the add-on accesses, what it stores, and
 what it does **not** do.
 
 > **Publish note:** Host this policy at a stable, publicly reachable URL on a
@@ -32,7 +32,7 @@ The add-on requests only the scopes it needs to function:
   requests to **your** Databricks workspace / Lakebase Data API to run queries and
   writeback. Requests go only to the hostname and endpoint you configure.
 
-Additionally, the Google Workspace Marketplace includes the basic
+Additionally, the Google Workspace™ Marketplace includes the basic
 **`userinfo.email`** and **`userinfo.profile`** scopes by default for all listed
 apps. These provide your account's email address and basic profile at sign-in.
 The add-on itself does not read, use, store, or transmit this information — it is
@@ -94,3 +94,9 @@ Material changes will be reflected here with an updated "Last updated" date.
 ## Contact
 
 Questions about this policy: support@vbalasu.com.
+
+## Trademarks
+
+Google Sheets™ and Google Workspace™ are trademarks of Google LLC. This add-on is
+an independent project and is not created, endorsed, or sponsored by Google LLC.
+Databricks and Lakebase are trademarks of Databricks, Inc.

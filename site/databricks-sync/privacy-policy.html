@@ -28,13 +28,13 @@
 <body>
 <h1>Privacy Policy — Databricks Sync for Google Sheets</h1>
 <p><em>Last updated: 2026-08-10</em></p>
-<p>Databricks Sync for Google Sheets (&quot;the add-on&quot;) is a Google Workspace editor add-on that connects a Google Sheet to a user&#x27;s own Databricks workspace or Lakebase database to read data into the sheet and write sheet data back to Databricks. This policy explains what the add-on accesses, what it stores, and what it does <strong>not</strong> do.</p>
+<p>Databricks Sync for Google Sheets&trade; (&quot;the add-on&quot;) is a Google Workspace&trade; editor add-on that connects a Google Sheets&trade; spreadsheet to a user&#x27;s own Databricks workspace or Lakebase database to read data into the sheet and write sheet data back to Databricks. This policy explains what the add-on accesses, what it stores, and what it does <strong>not</strong> do.</p>
 <h2>Who provides the add-on</h2>
 <p>The add-on is published by <strong>Vijay Balasubramaniam</strong> (individual developer). Contact: support@vbalasu.com.</p>
 <h2>What the add-on accesses</h2>
 <p>The add-on requests only the scopes it needs to function:</p>
 <ul><li><strong><code>https://www.googleapis.com/auth/spreadsheets.currentonly</code></strong> — read and write cells <strong>only in the spreadsheet the add-on is open in</strong>. The add-on cannot see or touch any of your other spreadsheets or Drive files.</li><li><strong><code>https://www.googleapis.com/auth/script.container.ui</code></strong> — show the sidebar and menu used to configure the connection and run syncs.</li><li><strong><code>https://www.googleapis.com/auth/script.external_request</code></strong> — make HTTPS requests to <strong>your</strong> Databricks workspace / Lakebase Data API to run queries and writeback. Requests go only to the hostname and endpoint you configure.</li></ul>
-<p>Additionally, the Google Workspace Marketplace includes the basic <strong><code>userinfo.email</code></strong> and <strong><code>userinfo.profile</code></strong> scopes by default for all listed apps. These provide your account&#x27;s email address and basic profile at sign-in. The add-on itself does not read, use, store, or transmit this information — it is not used by any add-on feature, and none of it is ever sent to the developer.</p>
+<p>Additionally, the Google Workspace&trade; Marketplace includes the basic <strong><code>userinfo.email</code></strong> and <strong><code>userinfo.profile</code></strong> scopes by default for all listed apps. These provide your account&#x27;s email address and basic profile at sign-in. The add-on itself does not read, use, store, or transmit this information — it is not used by any add-on feature, and none of it is ever sent to the developer.</p>
 <h2>What is stored, and where</h2>
 <ul><li><strong>Connection settings and credentials</strong> you enter (workspace hostname, HTTP path or Lakebase REST endpoint/schema, authentication type, and secrets such as a Personal Access Token, OAuth client ID/secret, or a cached OAuth token) are stored using Google Apps Script <strong><code>PropertiesService.getUserProperties()</code></strong> and a short-lived <strong><code>CacheService</code></strong> cache. This storage is: - <strong>Per user</strong> — scoped to your Google account. Other people who use the same spreadsheet cannot see your credentials. - <strong>Held within Google&#x27;s infrastructure</strong> for the add-on&#x27;s script — not on any server operated by the developer.</li><li><strong>Secrets are never displayed back</strong> in the UI once saved; the fields show a &quot;saved — leave blank to keep&quot; placeholder.</li></ul>
 <h2>What data flows where</h2>
@@ -49,6 +49,8 @@
 <p>Material changes will be reflected here with an updated &quot;Last updated&quot; date.</p>
 <h2>Contact</h2>
 <p>Questions about this policy: support@vbalasu.com.</p>
+<h2>Trademarks</h2>
+<p>Google Sheets&trade; and Google Workspace&trade; are trademarks of Google LLC. This add-on is an independent project and is not created, endorsed, or sponsored by Google LLC. Databricks and Lakebase are trademarks of Databricks, Inc.</p>
 <footer>Databricks Sync for Sheets · Published by Vijay Balasubramaniam · <a href="mailto:support@vbalasu.com">support@vbalasu.com</a></footer>
 </body>
 </html>
