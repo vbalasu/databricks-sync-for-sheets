@@ -26,7 +26,7 @@ Marketplace. Spec: https://docs.google.com/document/d/1pGYaFncKuHRdawt8OPozqLr2G
 - [x] 3. Link Apps Script → GCP project number `622786402076` — DONE
 - [x] 4. Configure OAuth consent screen (External) — DONE. App info, Audience=External, Contact, Branding (home/privacy/ToS URLs + authorized domain vbalasu.com), Data Access (3 scopes) all saved. Logo deferred (needs artwork; adding it can trigger verification). Still to do before testing: add test user vbalasu@gmail.com under Audience.
 - [x] 5. Verify `vbalasu.com` in Google Search Console — DONE (already a verified Domain property under vbalasu@gmail.com)
-- [ ] 6. **USER**: Host privacy policy + ToS at stable `vbalasu.com` URLs
+- [x] 6. Host privacy policy + ToS at stable `vbalasu.com` URLs — DONE (all 3 URLs return HTTP 200; generated HTML in site/databricks-sync/)
 - [ ] 8. **USER**: Prepare listing assets — 128×128 icon (+96/48), banner, 1–5 screenshots
 - [ ] 9. **USER**: Configure Marketplace store listing in the Marketplace SDK (script ID + version @1, copy, scopes, URLs, assets)
 - [ ] 10. **USER**: Record 2–3 min OAuth demo video showing each sensitive scope in use
