@@ -1,5 +1,12 @@
 .isaac/
 
+# macOS Finder metadata
+.DS_Store
+**/.DS_Store
+
+# Local PDF exports of human-input notes
+human-input/*.pdf
+
 # clasp project IDs are specific to the original Apps Script project.
 # Forkers should run `clasp create`/`clasp clone` to generate their own.
 .clasp.json
