@@ -187,12 +187,12 @@ one-time admin setup — see *Lakebase Data API setup* in the [README](README.md
 | Field | Value |
 | --- | --- |
 | Backend | `Lakebase (Postgres · Data API)` |
-| Server Hostname | `dbc-b29b2f7a-5112.cloud.databricks.com` |
-| Lakebase REST Endpoint | `https://ep-….database.us-east-2.cloud.databricks.com/api/2.0/workspace/1066745611279538/rest/databricks_postgres` |
+| Server Hostname | `dbc-a1b2c3d4-e5f6.cloud.databricks.com` |
+| Lakebase REST Endpoint | `https://<endpoint-host>.database.<region>.cloud.databricks.com/api/2.0/workspace/<workspace-id>/rest/databricks_postgres` |
 | Schema | `public` |
 | Primary Key column | `id` *(needed for Replace)* |
 | Authentication Type | `Service Principal (M2M)` |
-| Client ID | `b7df7dd1-1ec5-44de-9bc6-adaf26f34ec1` |
+| Client ID | `<your-service-principal-client-id>` |
 | Client Secret | *your service principal's OAuth secret* |
 
 Paste the **Lakebase REST Endpoint** exactly as shown on the Lakebase app's

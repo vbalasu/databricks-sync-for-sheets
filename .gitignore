@@ -4,8 +4,10 @@
 .DS_Store
 **/.DS_Store
 
-# Local PDF exports of human-input notes
-human-input/*.pdf
+# Internal working notes: publication runbook, submission package, status,
+# demo script, and specs. Kept local only — excluded from the public repo
+# (contains internal process + live workspace identifiers). Not for publication.
+human-input/
 
 # clasp project IDs are specific to the original Apps Script project.
 # Forkers should run `clasp create`/`clasp clone` to generate their own.
