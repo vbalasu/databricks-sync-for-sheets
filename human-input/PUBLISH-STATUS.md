@@ -30,8 +30,10 @@ Marketplace. Spec: https://docs.google.com/document/d/1pGYaFncKuHRdawt8OPozqLr2G
 - [x] 8. Prepare listing assets — DONE: icon (all sizes) in assets/; screenshots cropped to 1280px in assets/screenshots/cropped/ (01 setup sidebar, 02 completed read, 03 write card) + oauth-consent.png for verification. Banner still optional/TBD.
 - [x] 9. Configure Marketplace store listing — DONE. App Config (Public, Individual+Admin, Sheets add-on, Script ID + version 1, scopes incl. forced email/profile). Store Listing (name, descriptions, Productivity, English, All Regions, icons 32/48/96/128, banner 220x140, 3 screenshots, URLs, post-install tip, draft tester vbalasu@gmail.com). SUBMITTED FOR REVIEW 2026-08-10 ("Review Submitted").
 - [x] 10. Record OAuth demo video — DONE. Uploaded: https://youtu.be/v72qY77XpU8
-- [~] 11. **USER → Google**: Submit OAuth verification (video + scope justifications) — IN PROGRESS. Video link ready; scope justifications in SUBMISSION-PACKAGE.md. Runs in PARALLEL with listing review; Marketplace won't final-approve until this passes.
-- [~] 12. **USER → Google**: Listing submitted for review 2026-08-10 (parallel track). Final publish happens automatically once BOTH listing review + OAuth verification pass.
+- [x] 11. Submit OAuth verification — DONE. Published app to Production, added logo/branding, completed Verification Questionnaire (all No + both acknowledgments), submitted branding + data access with demo video + scope justification. SUBMITTED 2026-08-10. Google Trust & Safety review: first email in 3–5 days, full review up to 4–6 weeks. Existing (last approved) consent screen stays in use meanwhile.
+- [~] 12. **→ Google (waiting)**: Both tracks submitted 2026-08-10 — (a) Marketplace store listing review, (b) OAuth brand/verification review. App publishes/goes fully live once BOTH pass. Nothing more to do on our side except respond to any reviewer follow-up emails to vbalasu@gmail.com.
+
+## STATUS: everything on our side is DONE. Awaiting Google review (both tracks). Submitted 2026-08-10.
 
 ## Live test connection values (Free Edition workspace — non-secret)
 
