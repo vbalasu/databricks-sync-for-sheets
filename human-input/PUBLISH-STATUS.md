@@ -29,8 +29,8 @@ Marketplace. Spec: https://docs.google.com/document/d/1pGYaFncKuHRdawt8OPozqLr2G
 - [x] 6. Host privacy policy + ToS at stable `vbalasu.com` URLs — DONE (all 3 URLs return HTTP 200; generated HTML in site/databricks-sync/)
 - [x] 8. Prepare listing assets — DONE: icon (all sizes) in assets/; screenshots cropped to 1280px in assets/screenshots/cropped/ (01 setup sidebar, 02 completed read, 03 write card) + oauth-consent.png for verification. Banner still optional/TBD.
 - [x] 9. Configure Marketplace store listing — DONE. App Config (Public, Individual+Admin, Sheets add-on, Script ID + version 1, scopes incl. forced email/profile). Store Listing (name, descriptions, Productivity, English, All Regions, icons 32/48/96/128, banner 220x140, 3 screenshots, URLs, post-install tip, draft tester vbalasu@gmail.com). SUBMITTED FOR REVIEW 2026-08-10 ("Review Submitted").
-- [~] 10. Record 2–3 min OAuth demo video showing each sensitive scope in use — IN PROGRESS (storyboard in SUBMISSION-PACKAGE.md; much footage capturable from the completed live test).
-- [ ] 11. **USER → Google**: Submit OAuth verification (video + scope justifications) — review takes days–weeks. Runs in PARALLEL with the listing review; Marketplace won't final-approve until this passes.
+- [x] 10. Record OAuth demo video — DONE. Uploaded: https://youtu.be/v72qY77XpU8
+- [~] 11. **USER → Google**: Submit OAuth verification (video + scope justifications) — IN PROGRESS. Video link ready; scope justifications in SUBMISSION-PACKAGE.md. Runs in PARALLEL with listing review; Marketplace won't final-approve until this passes.
 - [~] 12. **USER → Google**: Listing submitted for review 2026-08-10 (parallel track). Final publish happens automatically once BOTH listing review + OAuth verification pass.
 
 ## Live test connection values (Free Edition workspace — non-secret)
