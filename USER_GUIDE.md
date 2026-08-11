@@ -32,10 +32,38 @@ You can connect to two kinds of Databricks backend:
 
 ---
 
-## Getting started: make your own copy
+## Getting started: two ways to get the add-on
 
-This add-on is distributed as a **template Google Sheet** with the code already
-built in. You don't install anything — you just make your own copy.
+You can get Databricks Sync **either** way — both run the same add-on:
+
+- **Option A — Google Workspace Marketplace** *(install the add-on)*.
+- **Option B — Template Google Sheet** *(make your own copy; always available,
+  no admin approval needed)*.
+
+Use whichever suits you. On a **managed Workspace domain**, the Marketplace
+install may require an admin; the template copy runs privately in your own
+account and doesn't.
+
+### Option A — Install from the Google Workspace Marketplace
+
+> **Availability:** the Marketplace listing is published once Google finishes
+> reviewing it. Until then, use **Option B** below.
+
+1. Open the **Google Workspace Marketplace** listing for **Databricks Sync for
+   Sheets** (or, in any Google Sheet, **Extensions → Add-ons → Get add-ons** and
+   search for *Databricks Sync*).
+2. Click **Install**, choose your account, and approve the permissions.
+3. Open (or reload) a Google Sheet. Within a few seconds an **Extensions →
+   Databricks Sync** entry (and a **Databricks Sync** menu) appears.
+
+Because the app is verified by Google, you will **not** see an "unverified app"
+warning with this option.
+
+### Option B — Make your own copy of the template
+
+The add-on is also distributed as a **template Google Sheet** with the code
+already built in. You don't install anything — you just make your own copy. This
+option always works, including where Marketplace installs are restricted.
 
 **➡️ [Click here to copy the Databricks Sync template](https://docs.google.com/spreadsheets/d/1JR1AFPB9LnqjAm0yvGCdE2AymtdMnVPTPrEoPNFqvh4/copy)**
 
@@ -50,15 +78,17 @@ built in. You don't install anything — you just make your own copy.
 > **First-time authorization prompt.** The first time you click a
 > **Databricks Sync** menu item, Google asks you to authorize the script and
 > shows a warning that reads **"Google hasn't verified this app."** This is
-> expected for template-copy add-ons — the script now runs privately in *your*
+> expected for the template-copy option — the script now runs privately in *your*
 > account. Click **Advanced → Go to Databricks Sync (unsafe)**, then **Allow**.
-> You only do this once per copy.
+> You only do this once per copy. (The Marketplace option in Option A does not
+> show this warning.)
 
 Everyone who needs their own synced sheet should make their **own** copy from
 the link above, rather than sharing a single copy — that way each person uses
 their own Databricks credentials.
 
-Once you've got your copy and the menu is showing, continue below.
+Once you've installed (Option A) or made your copy (Option B) and the
+**Databricks Sync** menu is showing, continue below.
 
 ---
 

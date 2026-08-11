@@ -22,6 +22,20 @@ It supports three enterprise authentication methods — Personal Access Token
 > step-by-step instructions on connecting a sheet and syncing data. The rest of
 > this README covers installation and deployment.
 
+## Distribution channels
+
+The add-on ships through **two parallel channels**, both running the same code:
+
+1. **Google Workspace Marketplace** — a public listing users install as an
+   add-on (verified by Google, no "unverified app" warning). See
+   [MARKETPLACE.md](MARKETPLACE.md) for the publication runbook and
+   `human-input/PUBLISH-STATUS.md` for current submission status.
+2. **Template copy** — a master Google Sheet shared via a `/copy` link; each user
+   makes a private copy that carries the bound script. Requires no admin approval
+   and works even where Marketplace installs are restricted.
+
+End-user install steps for both are in the **[User Guide](USER_GUIDE.md)**.
+
 ## Files
 
 | File | Purpose |
