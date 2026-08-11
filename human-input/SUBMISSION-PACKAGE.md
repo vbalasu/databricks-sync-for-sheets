@@ -102,6 +102,21 @@ narrow current-spreadsheet Sheets scope.
 
 No restricted scopes are requested, so no third-party security assessment is required.
 
+### "How will the scopes be used?" — Verification Center field (≤1000 chars, as submitted)
+
+```
+Databricks Sync for Sheets connects the open spreadsheet to the user's OWN Databricks (SQL Warehouse) or Lakebase database and syncs both ways: it reads query results into the sheet and writes sheet rows back to a Databricks table. All Databricks credentials are entered by the user and stored per-user; nothing is sent to the developer.
+
+Scope use:
+• script.container.ui — shows the add-on menu and sidebar where the user enters their Databricks host/auth and starts a sync.
+• script.external_request — UrlFetchApp HTTPS calls to the user's own Databricks: SQL Statement Execution API, OIDC token endpoints, and Lakebase Data API. Only the user-configured host is contacted.
+• spreadsheets.currentonly — writes results into the current sheet and reads its cells for writeback; the narrow current-document scope, so only the open spreadsheet is accessed.
+
+No restricted scopes. Demo showing each scope: https://youtu.be/v72qY77XpU8
+```
+
+Demo video: https://youtu.be/v72qY77XpU8
+
 ---
 
 ## Step 10 — OAuth demo video storyboard (~2–3 min)
