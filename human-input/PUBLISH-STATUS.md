@@ -27,11 +27,34 @@ Marketplace. Spec: https://docs.google.com/document/d/1pGYaFncKuHRdawt8OPozqLr2G
 - [x] 4. Configure OAuth consent screen (External) — DONE. App info, Audience=External, Contact, Branding (home/privacy/ToS URLs + authorized domain vbalasu.com), Data Access (3 scopes) all saved. Logo deferred (needs artwork; adding it can trigger verification). Still to do before testing: add test user vbalasu@gmail.com under Audience.
 - [x] 5. Verify `vbalasu.com` in Google Search Console — DONE (already a verified Domain property under vbalasu@gmail.com)
 - [x] 6. Host privacy policy + ToS at stable `vbalasu.com` URLs — DONE (all 3 URLs return HTTP 200; generated HTML in site/databricks-sync/)
-- [ ] 8. **USER**: Prepare listing assets — 128×128 icon (+96/48), banner, 1–5 screenshots
+- [x] 8. Prepare listing assets — DONE: icon (all sizes) in assets/; screenshots cropped to 1280px in assets/screenshots/cropped/ (01 setup sidebar, 02 completed read, 03 write card) + oauth-consent.png for verification. Banner still optional/TBD.
 - [ ] 9. **USER**: Configure Marketplace store listing in the Marketplace SDK (script ID + version @1, copy, scopes, URLs, assets)
 - [ ] 10. **USER**: Record 2–3 min OAuth demo video showing each sensitive scope in use
 - [ ] 11. **USER → Google**: Submit OAuth verification (video + scope justifications) — review takes days–weeks
 - [ ] 12. **USER → Google**: Submit store listing → publish live (after OAuth verification passes)
+
+## Live test connection values (Free Edition workspace — non-secret)
+
+Workspace host: `dbc-b29b2f7a-5112.cloud.databricks.com` · SP Client ID `b7df7dd1-1ec5-44de-9bc6-adaf26f34ec1` (profile `free-sp`; secret held by user)
+
+**SQL Warehouse backend:**
+- HTTP Path: `/sql/1.0/warehouses/d575f01a7ef7efc0` (warehouse RUNNING)
+- Read/write table: `workspace.gsheet_sp_test.wb` (cols: id bigint, name string, pi double, flag boolean, ts timestamp)
+
+**Lakebase backend:**
+- REST Endpoint: `https://ep-summer-rain-d86oc5rb.database.us-east-2.cloud.databricks.com/api/2.0/workspace/1066745611279538/rest/databricks_postgres`
+- Schema: `public` · Table: `writeback` (id bigint PK, name text, pi double precision, flag boolean)
+- Lakebase project `vbalasu-free`, branch `production`; SP authenticator setup already done (prior Replace ran)
+
+## Live test results (2026-08-10)
+
+- **SQL Warehouse — READ**: ✓ Synced 3 rows × 5 cols from `workspace.gsheet_sp_test.wb` into the sheet. Numeric `pi` values preserved (formula-escaper leaves plain numbers alone).
+- **SQL Warehouse — WRITEBACK (Replace)**: ✓ "Replaced 4 row(s)". Independently verified via direct SQL query — table contains exactly the 4 sheet rows (alice/bob/vijay/carol).
+- **Consent screen**: ✓ Branded "Databricks Sync For Sheets", correct 3 scopes, privacy/ToS links present.
+- Screenshots captured: setup sidebar, completed read, Write-to-Databricks (Replace) card.
+- **Lakebase — READ**: ✓ Synced 3 rows × 4 cols from `public.writeback`.
+- **Lakebase — WRITEBACK (Replace)**: ✓ "Replaced 3 row(s)". Verified via re-read — edited value `lakebase-test` persisted and read back.
+- **RESULT**: both backends validated in both directions (read + Replace writeback). App works end-to-end.
 
 ## Notes
 - Steps 3–12 are Google-console UI / DNS / Google-review gated — no CLI/API automation available.
