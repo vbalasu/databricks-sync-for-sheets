@@ -1,6 +1,6 @@
 # Terms of Service — Databricks Sync for Google Sheets
 
-_Last updated: 2026-08-09_
+_Last updated: 2026-08-10_
 
 These terms govern your use of the **Databricks Sync for Google Sheets** add-on
 ("the add-on"), provided by **Vijay Balasubramaniam** (individual developer,

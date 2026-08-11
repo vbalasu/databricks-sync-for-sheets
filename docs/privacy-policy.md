@@ -1,6 +1,6 @@
 # Privacy Policy — Databricks Sync for Google Sheets
 
-_Last updated: 2026-08-09_
+_Last updated: 2026-08-10_
 
 Databricks Sync for Google Sheets ("the add-on") is a Google Workspace editor
 add-on that connects a Google Sheet to a user's own Databricks workspace or
@@ -31,6 +31,12 @@ The add-on requests only the scopes it needs to function:
 - **`https://www.googleapis.com/auth/script.external_request`** — make HTTPS
   requests to **your** Databricks workspace / Lakebase Data API to run queries and
   writeback. Requests go only to the hostname and endpoint you configure.
+
+Additionally, the Google Workspace Marketplace includes the basic
+**`userinfo.email`** and **`userinfo.profile`** scopes by default for all listed
+apps. These provide your account's email address and basic profile at sign-in.
+The add-on itself does not read, use, store, or transmit this information — it is
+not used by any add-on feature, and none of it is ever sent to the developer.
 
 ## What is stored, and where
 
